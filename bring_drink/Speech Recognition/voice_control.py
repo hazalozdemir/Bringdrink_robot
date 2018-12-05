@@ -47,7 +47,9 @@ class ASRControl(object):
     def give_order(self):
         
         print("Your order is",self.number,self.selection )  
-        
+        self.number = 0
+        self.selection = "empty"
+
     def parse_order(self):
 
         if self.decoder.hyp() != None:
