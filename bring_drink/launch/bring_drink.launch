@@ -7,7 +7,7 @@
   </include>
 
   <!-- Map server -->
-  <arg name="map_file" value="/home/hazal/catkin_ws/src/bring_drink/maps/lastmymap.yaml"/>
+  <arg name="map_file" value="$(find bring_drink)/maps/lastmymap.yaml"/>
   <arg name="3d_sensor" default="$(env TURTLEBOT_3D_SENSOR)"/>  <!-- r200, kinect, asus_xtion_pro -->
 
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
