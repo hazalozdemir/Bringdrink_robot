@@ -30,8 +30,10 @@
 
   <!-- start some nice visualisations from the robot's perspective -->
 
-  <include file="$(find turtlebot_rviz_launchers)/launch/view_navigation.launch"/>
+  <!--<include file="$(find turtlebot_rviz_launchers)/launch/view_navigation.launch"/>-->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find bring_drink)/rviz/bd.rviz" />
   <!-- <node pkg="bring_drink" type="bring_robot" name="bring_robot"  output="screen">
   </node> -->
+
 
 </launch>
