@@ -7,6 +7,15 @@ import rospy
 import actionlib
 # Brings in the .action file and messages used by the move base action
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from gazebo_msgs.msg import ModelState
+
+fanta_no = 24
+cola_no = 19
+sprite_no = 25
+
+table1_drinks = 0
+table2_drinks = 0
+table3_drinks = 0
 
 objects = {
     #table 3 coords
@@ -63,10 +72,59 @@ objects = {
 
 
 def parse_order(msg):
+    global cola_no, fanta_no, sprite_no, table1_drinks, table2_drinks, table3_drinks
+    rate = rospy.Rate(10)
+    pub = rospy.Publisher('/gazebo/set_model_state', ModelState, queue_size=10)
+    
     order = msg.split(',')
     drink = movebase_client(order[1])
+    
+    ordered_drink = ModelState()
+
+    if (order[1] == "fanta"):
+       model_name = "can_fanta_clone_" + str(fanta_no)
+       fanta_no -= 1
+    elif (order[1] == "coke"):
+       model_name = "can_coke_clone_" + str(cola_no)
+       cola_no -= 1
+    elif (order[1] == "sprite"):
+       model_name = "can_sprite_clone_" + str(sprite_no)
+       sprite_no -= 1
+
+    ordered_drink.model_name = model_name
+
+    if (order[2] == "one"):
+    	ordered_drink.pose.position.x = -2.3 - 0.1*(table1_drinks%2)
+        ordered_drink.pose.position.y = -2.3 + 0.1*table1_drinks
+        ordered_drink.pose.position.z = -1
+        table1_drinks += 1
+
+    elif (order[2] == "two"):
+    	ordered_drink.pose.position.x = -2.3 - 0.1*(table2_drinks%2)
+        ordered_drink.pose.position.y = 1.3 + 0.1*table2_drinks
+        ordered_drink.pose.position.z = -1
+        table2_drinks += 1
+
+    elif (order[2] == "three"):
+    	ordered_drink.pose.position.x = -2.3 - 0.1*(table3_drinks%2)
+        ordered_drink.pose.position.y = 5.2 + 0.1*table3_drinks
+        ordered_drink.pose.position.z = -1
+        table3_drinks += 1
+    a = 0
+    while a < 50:
+        pub.publish(ordered_drink)
+        rate.sleep()
+        a += 1
     #remove drink from kitchen
     table = movebase_client(order[2])
+    
+    ordered_drink.pose.position.z = 0.8
+    a = 0
+    while a < 50:
+        pub.publish(ordered_drink)
+        rate.sleep()
+        a += 1
+        
     #add drink to table
     return table
 
@@ -135,7 +193,7 @@ def movebase_client(data):
 # If the python node is executed as main process (sourced directly)
 if __name__ == '__main__':
     rospy.init_node('movebase_client_py')
-     while not rospy.is_shutdown():
+    while not rospy.is_shutdown():
         try:
            # Initializes a rospy node to let the SimpleActionClient publish and subscribe
 
