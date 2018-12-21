@@ -8,6 +8,7 @@ import actionlib
 # Brings in the .action file and messages used by the move base action
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from gazebo_msgs.msg import ModelState
+from std_msgs.msg import String
 
 fanta_no = 24
 cola_no = 19
@@ -70,11 +71,12 @@ objects = {
     }
 }
 
-
 def parse_order(msg):
     global cola_no, fanta_no, sprite_no, table1_drinks, table2_drinks, table3_drinks
     rate = rospy.Rate(10)
     pub = rospy.Publisher('/gazebo/set_model_state', ModelState, queue_size=10)
+    #order = rospy.Subscriber('voice', String, callback)
+    printr(msg.data)
     
     order = msg.split(',')
     drink = movebase_client(order[1])
@@ -197,10 +199,10 @@ if __name__ == '__main__':
         try:
            # Initializes a rospy node to let the SimpleActionClient publish and subscribe
 
-        #    result = parse_order("one,fanta,two")
-            # result = movebase_client("coke")
-            # rospy.Subscriber(speech_pub, String, parse_order)
-            if result:
-                rospy.loginfo("Goal execution done!")
+			result = parse_order("one,fanta,two")
+			result = movebase_client("coke")
+			rospy.Subscriber('voice', String, parse_order)
+			if result:
+				rospy.loginfo("Goal execution done!")
         except rospy.ROSInterruptException:
             rospy.loginfo("Navigation test finished.")
