@@ -76,9 +76,9 @@ def parse_order(msg):
     rate = rospy.Rate(10)
     pub = rospy.Publisher('/gazebo/set_model_state', ModelState, queue_size=10)
     #order = rospy.Subscriber('voice', String, callback)
-    printr(msg.data)
+    print(msg.data)
     
-    order = msg.split(',')
+    order = msg.data.split(',')
     drink = movebase_client(order[1])
     
     ordered_drink = ModelState()
@@ -199,10 +199,10 @@ if __name__ == '__main__':
         try:
            # Initializes a rospy node to let the SimpleActionClient publish and subscribe
 
-			result = parse_order("one,fanta,two")
-			result = movebase_client("coke")
-			rospy.Subscriber('voice', String, parse_order)
-			if result:
-				rospy.loginfo("Goal execution done!")
+			#result = parse_order("one,fanta,two")
+			#result = movebase_client("coke")
+			result = rospy.Subscriber('voice', String, parse_order)
+			#if result:
+			#	rospy.loginfo("Goal execution done!")
         except rospy.ROSInterruptException:
             rospy.loginfo("Navigation test finished.")
