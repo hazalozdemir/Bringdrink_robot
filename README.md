@@ -9,3 +9,7 @@ To export environment models: you can type below code in terminal.
 To run project : you can type below code in terminal.
 
 `roslaunch bring_drink bring_drink.launch`
+
+To detect the objects run the "object_detector.py" from the src folder with the command below
+
+`python object_detector.py`
