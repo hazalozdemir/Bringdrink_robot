@@ -22,7 +22,7 @@ class Voice_Control(object):
         rospy.on_shutdown(self.shutdown)
         self.speech_pub = rospy.Publisher('voice', String, queue_size=1)
         rospy.init_node('speech', anonymous = True)
-        rate = rospy.Rate(10)	# sorun
+        rate = rospy.Rate(10)	
 
         # initialize pocketsphinx
         config = Decoder.default_config()
@@ -56,7 +56,6 @@ class Voice_Control(object):
                 
         self.speech_pub.publish(self.msg)
         print("message published")
-        #rospy.spin();	#sorun
         rate = rospy.Rate(10)	# sorun
         rate.sleep()		#sleep
         self.msg.data = "empty"
@@ -69,7 +68,7 @@ class Voice_Control(object):
     def parse_order(self):
 
         if self.decoder.hyp() != None:
-			print ([(seg.word, seg.prob, seg.start_frame, seg.end_frame)
+			#print ([(seg.word, seg.prob, seg.start_frame, seg.end_frame)
 				for seg in self.decoder.seg()])
 			#print ("Detected keyphrase, restarting search")          
 			seg.word = seg.word.lower()
@@ -77,7 +76,7 @@ class Voice_Control(object):
 			self.decoder.start_utt()
 			
 			if self.number == "empty":
-			
+				print(self.number)
 				if seg.word.find("one") > -1:
 					self.number = "one"
 					
@@ -87,7 +86,7 @@ class Voice_Control(object):
 				elif seg.word.find("three") > -1:
 					self.number = "three"
 			elif self.number != "empty" and self.selection == "empty":
-			
+				print(self.selection)
 				if seg.word.find("coke") > -1:
 					self.selection = "coke"
 				
@@ -97,6 +96,7 @@ class Voice_Control(object):
 				elif seg.word.find("fanta") > -1:
 					self.selection = "fanta"
 			elif self.selection != "empty":
+				print(self.table_number)
 				if seg.word.find("one") > -1:
 					self.table_number = "one"
 				
