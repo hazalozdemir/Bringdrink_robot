@@ -71,10 +71,12 @@ objects = {
     }
 }
 
+### BELOW CODE ADDED BY TEAM BRINGDRINK 2018 BLG456E PROJECT ###
+
 def parse_order(msg):
     global cola_no, fanta_no, sprite_no, table1_drinks, table2_drinks, table3_drinks
-    rate = rospy.Rate(10)
-    pub = rospy.Publisher('/gazebo/set_model_state', ModelState, queue_size=10)
+    r = rospy.Rate(10)
+    teleport = rospy.Publisher('/gazebo/set_model_state', ModelState, queue_size=10)
     #order = rospy.Subscriber('voice', String, callback)
     print(msg.data)
     
@@ -114,8 +116,8 @@ def parse_order(msg):
         table3_drinks += 1
     a = 0
     while a < 50:
-        pub.publish(ordered_drink)
-        rate.sleep()
+        teleport.publish(ordered_drink)
+        r.sleep()
         a += 1
     #remove drink from kitchen
     table = movebase_client(order[2])
@@ -123,8 +125,8 @@ def parse_order(msg):
     ordered_drink.pose.position.z = 0.8
     a = 0
     while a < 50:
-        pub.publish(ordered_drink)
-        rate.sleep()
+        teleport.publish(ordered_drink)
+        r.sleep()
         a += 1
         
     #add drink to table
