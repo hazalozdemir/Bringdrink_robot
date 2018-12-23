@@ -3,6 +3,8 @@
 usage:
 rosrun proteus_demo ImageView.py image:=/ATRV/CameraMain
 """
+#this code taken from web to use as UI template
+#but the object detection algorithm implemented by BringDrink team
 import roslib
 roslib.load_manifest('rospy')
 roslib.load_manifest('sensor_msgs')
@@ -68,14 +70,14 @@ class ImageViewPanel(wx.Panel):
         mean = [bmean, gmean, rmean]
         max = np.amax(mean)
         if rmean < 130 and rmean > 80 and gmean > 35 and gmean < 50:
-            print("orange")
+            print("fanta")
         else:
             if max == bmean:
-                print("blue")
+                print("sprite")
             elif max == gmean:
-                print("green")
+                print("sprite")
             elif max == rmean:
-                print("red")
+                print("coke")
             else:
                 print("gray")
         #cv2.rectangle(image, (x, x+w), (y, y+h), (0,0,255), 2)
