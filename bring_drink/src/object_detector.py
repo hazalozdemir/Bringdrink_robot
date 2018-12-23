@@ -4,6 +4,7 @@ usage:
 rosrun proteus_demo ImageView.py image:=/ATRV/CameraMain
 """
 #this code taken from web to use as UI template
+#from this adress https://gist.github.com/pierriko/1330022
 #but the object detection algorithm implemented by BringDrink team
 import roslib
 roslib.load_manifest('rospy')
