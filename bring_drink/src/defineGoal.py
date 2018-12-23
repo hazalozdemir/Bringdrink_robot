@@ -185,11 +185,7 @@ def movebase_client(data):
     goal.target_pose.header.frame_id = "map"
     goal.target_pose.header.stamp = rospy.Time.now()
 
-
-   # Move 0.5 meters forward along the x axis of the "map" coordinate frame
-
     goal.target_pose.pose.position.x = navObj["pos_coor_x"]
-
 
     goal.target_pose.pose.position.y = navObj["pos_coor_y"]
    # No rotation of the mobile base frame w.r.t. map frame
@@ -215,7 +211,6 @@ def movebase_client(data):
 def callback(msg):
 	global order_message
 	if msg.data == order_message:
-		#print("same message")
 		return
 	else: 
 		order = msg.data.split(',')
@@ -234,10 +229,7 @@ if __name__ == '__main__':
     rospy.init_node('movebase_client_py')
     while not rospy.is_shutdown():
 		try:
-           # Initializes a rospy node to let the SimpleActionClient publish and subscribe
-
+			#Subscribe to voice recognition node
 			rospy.Subscriber('voice', String, callback)
-			#if result:
-			#	rospy.loginfo("Goal execution done!")
 		except rospy.ROSInterruptException:
 			rospy.loginfo("Navigation test finished.")

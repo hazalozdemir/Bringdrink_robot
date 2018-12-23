@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-"""This module is a simple demonstration of voice control
-for ROS turtlebot using pocketsphinx
-"""
 from std_msgs.msg import String
 
 import argparse
@@ -13,12 +10,13 @@ from pocketsphinx.pocketsphinx import *
 from sphinxbase.sphinxbase import *
 import pyaudio
 
+### Some parts of the below code taken from https://github.com/gorinars/ros_voice_control/blob/master/ros_voice_control.py/###
+
 class Voice_Control(object):
 
     def __init__(self, model, lexicon, kwlist):
         self.msg = String()
 
-        #rospy.init_node('voice_cmd_vel')
         rospy.on_shutdown(self.shutdown)
         self.speech_pub = rospy.Publisher('voice', String, queue_size=1)
         rospy.init_node('speech', anonymous = True)
@@ -46,6 +44,8 @@ class Voice_Control(object):
             else:
                 break
             self.parse_order()
+
+### BELOW CODE ADDED BY TEAM BRINGDRINK 2018 BLG456E PROJECT ###
             
     def give_order(self):
         
@@ -56,21 +56,17 @@ class Voice_Control(object):
                 
         self.speech_pub.publish(self.msg)
         print("message published")
-        rate = rospy.Rate(10)	# sorun
-        rate.sleep()		#sleep
+        rate = rospy.Rate(10)	
+        rate.sleep()		
         self.msg.data = "empty"
         self.speech_pub.publish(self.msg)
-        print("message published 2")
         self.number = "empty"
         self.selection = "empty"
         self.table_number = "empty"
         
     def parse_order(self):
 
-        if self.decoder.hyp() != None:
-			#print ([(seg.word, seg.prob, seg.start_frame, seg.end_frame)
-				for seg in self.decoder.seg()])
-			#print ("Detected keyphrase, restarting search")          
+        if self.decoder.hyp() != None:      
 			seg.word = seg.word.lower()
 			self.decoder.end_utt()
 			self.decoder.start_utt()
@@ -110,13 +106,13 @@ class Voice_Control(object):
 			if self.number != "empty" and self.selection != "empty" and self.table_number != "empty":
 					self.give_order()
 
-      
         
     def shutdown(self):
-
         rospy.loginfo("Stop Voice_Control")
-        #self.pub_.publish(Twist())
         rospy.sleep(1)
+
+### Below code taken from https://github.com/gorinars/ros_voice_control/blob/master/ros_voice_control.py/###
+        
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Control ROS turtlebot using pocketsphinx.')
@@ -132,10 +128,6 @@ if __name__ == '__main__':
         default='key_list3.kwlist',
         help='''keyword list with thresholds
         (default: key_list3.kwlist)''')
-    ##parser.add_argument('--rospub', type=str,
-    ##    default='mobile_base/commands/velocity',
-     ##   help='''ROS publisher destination
-       ## (default: mobile_base/commands/velocity)''')
 
     args = parser.parse_args()
     Voice_Control(args.model, args.lexicon, args.kwlist)
