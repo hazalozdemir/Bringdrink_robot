@@ -11,7 +11,7 @@ commands must be executed. Then;
 
 To export environment models:
 
-- export GAZEBO_MODEL_PATH=<path-to-models-folder>
+- export GAZEBO_MODEL_PATH= /path-to-models-folder/
 
 To install required packages:
 - python -m pip install --upgrade pip setuptools wheel
