@@ -11,12 +11,14 @@ from gazebo_msgs.msg import ModelState
 from std_msgs.msg import String
 
 fanta_no = 24
-cola_no = 19
+cola_no = 8
 sprite_no = 25
 
 table1_drinks = 0
 table2_drinks = 0
 table3_drinks = 0
+
+order_message = ""
 
 objects = {
     #table 3 coords
@@ -71,14 +73,28 @@ objects = {
     }
 }
 
+### BELOW CODE ADDED BY TEAM BRINGDRINK 2018 BLG456E PROJECT ###
+
 def parse_order(msg):
     global cola_no, fanta_no, sprite_no, table1_drinks, table2_drinks, table3_drinks
+    global order_message
+    order_message = msg.data
+
     rate = rospy.Rate(10)
     pub = rospy.Publisher('/gazebo/set_model_state', ModelState, queue_size=10)
-    #order = rospy.Subscriber('voice', String, callback)
     print(msg.data)
-    
     order = msg.data.split(',')
+    
+    if order[1] == "coke" and cola_no < 1:
+		print("Sorry we don't have coke right now do you want something else?")
+		return
+    elif order[1] == "fanta" and fanta_no < 1:
+		print("Sorry we don't have fanta right now do you want something else?")
+		return
+    elif order[1] == "sprite" and sprite_no < 1:
+		print("Sorry we don't have sprite right now do you want something else?")
+		return
+        
     drink = movebase_client(order[1])
     
     ordered_drink = ModelState()
@@ -125,10 +141,12 @@ def parse_order(msg):
     while a < 50:
         pub.publish(ordered_drink)
         rate.sleep()
-        a += 1
+        a += 1 
         
     #add drink to table
     return table
+
+### BELOW CODE TAKEN FROM http://www.hotblackrobotics.com/en/blog/2018/01/29/action-client-py/###
 
 def movebase_client(data):
 
@@ -191,18 +209,35 @@ def movebase_client(data):
     else:
     # Result of executing the action
         return client.get_result()
-
+        
+### BELOW CODE ADDED BY TEAM BRINGDRINK 2018 BLG456E PROJECT ### 
+        
+def callback(msg):
+	global order_message
+	if msg.data == order_message:
+		#print("same message")
+		return
+	else: 
+		order = msg.data.split(',')
+		if order[0] == "one"
+			parse_order(msg)
+		elif order[0] == "two"
+			parse_order(msg)
+			parse_order(msg)		
+		elif order[0] == "three"
+			parse_order(msg)
+			parse_order(msg)		
+			parse_order(msg)		
+		
 # If the python node is executed as main process (sourced directly)
 if __name__ == '__main__':
     rospy.init_node('movebase_client_py')
     while not rospy.is_shutdown():
-        try:
+		try:
            # Initializes a rospy node to let the SimpleActionClient publish and subscribe
 
-			#result = parse_order("one,fanta,two")
-			#result = movebase_client("coke")
-			result = rospy.Subscriber('voice', String, parse_order)
+			rospy.Subscriber('voice', String, callback)
 			#if result:
 			#	rospy.loginfo("Goal execution done!")
-        except rospy.ROSInterruptException:
-            rospy.loginfo("Navigation test finished.")
+		except rospy.ROSInterruptException:
+			rospy.loginfo("Navigation test finished.")

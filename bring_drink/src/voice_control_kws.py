@@ -3,29 +3,26 @@
 """This module is a simple demonstration of voice control
 for ROS turtlebot using pocketsphinx
 """
-#!/usr/bin/env python
-# license removed for brevity
 from std_msgs.msg import String
-
 
 import argparse
 import roslib
 import rospy
-from geometry_msgs.msg import Twist
 
 from pocketsphinx.pocketsphinx import *
 from sphinxbase.sphinxbase import *
 import pyaudio
 
-class ASRControl(object):
+class Voice_Control(object):
 
-    def __init__(self, model, lexicon, kwlist, speech_pub):
+    def __init__(self, model, lexicon, kwlist):
         self.msg = String()
 
         #rospy.init_node('voice_cmd_vel')
         rospy.on_shutdown(self.shutdown)
-        self.speech_pub = rospy.Publisher('voice', String, queue_size=10)
+        self.speech_pub = rospy.Publisher('voice', String, queue_size=1)
         rospy.init_node('speech', anonymous = True)
+        rate = rospy.Rate(10)	# sorun
 
         # initialize pocketsphinx
         config = Decoder.default_config()
@@ -49,15 +46,22 @@ class ASRControl(object):
             else:
                 break
             self.parse_order()
+            
     def give_order(self):
         
         order = str(self.number) + ',' + self.selection + ',' + str(self.table_number)
         
-        print("Your order is",self.number,self.selection )
+        print("Your order is",self.number, self.selection, "to table ",self.table_number)
         self.msg.data = order
                 
         self.speech_pub.publish(self.msg)
-        
+        print("message published")
+        #rospy.spin();	#sorun
+        rate = rospy.Rate(10)	# sorun
+        rate.sleep()		#sleep
+        self.msg.data = "empty"
+        self.speech_pub.publish(self.msg)
+        print("message published 2")
         self.number = "empty"
         self.selection = "empty"
         self.table_number = "empty"
@@ -67,7 +71,7 @@ class ASRControl(object):
         if self.decoder.hyp() != None:
 			print ([(seg.word, seg.prob, seg.start_frame, seg.end_frame)
 				for seg in self.decoder.seg()])
-			print ("Detected keyphrase, restarting search")          
+			#print ("Detected keyphrase, restarting search")          
 			seg.word = seg.word.lower()
 			self.decoder.end_utt()
 			self.decoder.start_utt()
@@ -110,7 +114,7 @@ class ASRControl(object):
         
     def shutdown(self):
 
-        rospy.loginfo("Stop ASRControl")
+        rospy.loginfo("Stop Voice_Control")
         #self.pub_.publish(Twist())
         rospy.sleep(1)
 if __name__ == '__main__':
@@ -128,12 +132,12 @@ if __name__ == '__main__':
         default='key_list3.kwlist',
         help='''keyword list with thresholds
         (default: key_list3.kwlist)''')
-    parser.add_argument('--rospub', type=str,
-        default='mobile_base/commands/velocity',
-        help='''ROS publisher destination
-        (default: mobile_base/commands/velocity)''')
+    ##parser.add_argument('--rospub', type=str,
+    ##    default='mobile_base/commands/velocity',
+     ##   help='''ROS publisher destination
+       ## (default: mobile_base/commands/velocity)''')
 
     args = parser.parse_args()
-    ASRControl(args.model, args.lexicon, args.kwlist, args.rospub)
+    Voice_Control(args.model, args.lexicon, args.kwlist)
 
 
