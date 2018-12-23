@@ -16,7 +16,6 @@ To export environment models:
 To install required packages:
 - python -m pip install --upgrade pip setuptools wheel
 - pip install pocketsphinx
-- pyaudio
 - pip install pyaudio
 
 To make the source codes executable:
