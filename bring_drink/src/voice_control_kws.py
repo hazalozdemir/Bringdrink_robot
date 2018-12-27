@@ -74,35 +74,47 @@ class Voice_Control(object):
 			self.decoder.start_utt()
 			
 			if self.number == "empty":
-				print(self.number)
 				if seg.word.find("one") > -1:
 					self.number = "one"
-					
+					print(self.number)
+			
 				elif seg.word.find("two") > -1:
 					self.number = "two"
+					print(self.number)
 					
 				elif seg.word.find("three") > -1:
 					self.number = "three"
+					print(self.number)
+
 			elif self.number != "empty" and self.selection == "empty":
-				print(self.selection)
 				if seg.word.find("coke") > -1:
 					self.selection = "coke"
-				
+					print(self.selection)
+
 				elif seg.word.find("sprite") > -1:
 					self.selection = "sprite"
+					print(self.selection)
+
 					
 				elif seg.word.find("fanta") > -1:
 					self.selection = "fanta"
+					print(self.selection)
+
 			elif self.selection != "empty":
-				print(self.table_number)
 				if seg.word.find("one") > -1:
 					self.table_number = "one"
+					print(self.table_number)
+
 				
 				elif seg.word.find("two") > -1:
 					self.table_number = "two"
+					print(self.table_number)
+
 				
 				elif seg.word.find("three") > -1:
 					self.table_number = "three"
+					print(self.table_number)
+
 					
 
 			if self.number != "empty" and self.selection != "empty" and self.table_number != "empty":
