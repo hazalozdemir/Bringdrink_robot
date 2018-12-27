@@ -66,7 +66,9 @@ class Voice_Control(object):
         
     def parse_order(self):
 
-        if self.decoder.hyp() != None:      
+        if self.decoder.hyp() != None:  
+			print ([(seg.word, seg.prob, seg.start_frame, seg.end_frame)
+				for seg in self.decoder.seg()])    
 			seg.word = seg.word.lower()
 			self.decoder.end_utt()
 			self.decoder.start_utt()
